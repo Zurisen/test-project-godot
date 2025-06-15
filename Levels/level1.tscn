@@ -25,9 +25,13 @@ transform = Transform3D(-0.929133, -0.188216, 0.318257, 0, 0.860742, 0.509041, -
 shadow_enabled = true
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+transform = Transform3D(0.996855, 0, 0.0792421, 0, 1, 0, -0.0792421, 0, 0.996855, 0, -0.5, 0)
 use_collision = true
 size = Vector3(50, 1, 50)
 
 [node name="Player" parent="." instance=ExtResource("1_t21ke")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="."]
+transform = Transform3D(0.0619175, 0, 3.50339, 0, 3.525, 0, -0.556566, 0, 0.389749, -3.24683, 1.94537, -4.16807)
+use_collision = true
