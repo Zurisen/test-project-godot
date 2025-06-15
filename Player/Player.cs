@@ -6,8 +6,8 @@ public partial class Player : CharacterBody3D
 	public const float Speed = 5.0f;
 	public const float JumpVelocity = 4.5f;
 
-	[Export]
-	public float MouseSensitivity = 0.00075f;
+	public float MouseSensitivity = 0.003f;
+
 	private Vector2 _look = Vector2.Zero;
 	private Node3D _horizontalPivot;
 	private Node3D _verticalPivot;
@@ -38,10 +38,7 @@ public partial class Player : CharacterBody3D
 			velocity.Y = JumpVelocity;
 		}
 
-		// Get the input direction and handle the movement/deceleration.
-		// As good practice, you should replace UI actions with custom gameplay actions.
-		Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
-		Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+		Vector3 direction = _handleMovement();
 		if (direction != Vector3.Zero)
 		{
 			velocity.X = direction.X * Speed;
@@ -78,8 +75,15 @@ public partial class Player : CharacterBody3D
 		_verticalPivot.RotateX(_look.Y);
 
 		float newPitch = (float)Mathf.Clamp(_verticalPivot.Rotation.X, -Math.PI / 2f, Math.PI / 2f);
-		smoothCameraArm.Rotation = new Vector3(newPitch, _horizontalPivot.Rotation.Y, 0);
+		_verticalPivot.Rotation = new Vector3(newPitch, _verticalPivot.Rotation.Y, _verticalPivot.Rotation.Z);
 
 		_look = Vector2.Zero;
+	}
+
+	private Vector3 _handleMovement()
+	{
+		Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
+		Vector3 direction = (_horizontalPivot.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+		return direction;
 	}
 }
