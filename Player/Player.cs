@@ -15,7 +15,7 @@ public partial class Player : CharacterBody3D
 	private Node3D _horizontalPivot;
 	private Node3D _verticalPivot;
 	private Node3D _rigPivot;
-	
+	private Rig _characterRig;
 
 	public override void _Ready()
 	{
@@ -24,6 +24,7 @@ public partial class Player : CharacterBody3D
 		_horizontalPivot = GetNode<Node3D>("HorizontalPivot");
 		_verticalPivot = GetNode<Node3D>("HorizontalPivot/VerticalPivot");
 		_rigPivot = GetNode<Node3D>("RigPivot");
+		_characterRig = GetNode<Rig>("RigPivot/CharacterRig");
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 	}
 
@@ -45,6 +46,7 @@ public partial class Player : CharacterBody3D
 		}
 
 		Vector3 direction = _handleMovement();
+		_characterRig.UpdateAnimationTree(direction);
 		if (direction != Vector3.Zero)
 		{
 			velocity.X = direction.X * Speed;
@@ -69,6 +71,14 @@ public partial class Player : CharacterBody3D
 			if (@event is InputEventMouseMotion mouseMotion)
 			{
 				_look = -mouseMotion.Relative * MouseSensitivity;
+			}
+		}
+
+		if (_characterRig.isIdle())
+		{
+			if (@event.IsActionPressed("attack_melee"))
+			{
+				_slashAttack();
 			}
 		}
 	}
@@ -98,6 +108,11 @@ public partial class Player : CharacterBody3D
             (float)(1 - Mathf.Exp(-_movementAnimationDecay * delta))
 		 );
 
+	}
+
+	private void _slashAttack()
+	{
+		_characterRig.Travel("Slash");
 	}
 
 	private Vector3 _handleMovement()
