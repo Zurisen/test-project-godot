@@ -1,6 +1,19 @@
-[gd_scene load_steps=5 format=3 uid="uid://ry0lvvrsbro7"]
+[gd_scene load_steps=19 format=3 uid="uid://ry0lvvrsbro7"]
 
 [ext_resource type="PackedScene" uid="uid://bb6mbofwl8l13" path="res://Player/player.tscn" id="1_t21ke"]
+[ext_resource type="PackedScene" uid="uid://2ossp74oraxn" path="res://Assets/Environment/Barrel_Wooden_Prop.glb" id="2_i4kf4"]
+[ext_resource type="PackedScene" uid="uid://70442v3i1mt" path="res://Assets/Environment/Rock_Cliff_Env_03.glb" id="3_fy36t"]
+[ext_resource type="PackedScene" uid="uid://bn57icx7pd2ei" path="res://Assets/Environment/Large_Mountain_Env_02.glb" id="4_j32wv"]
+[ext_resource type="PackedScene" uid="uid://c3mcrisfokvae" path="res://Assets/Environment/House_Modular_01.glb" id="5_nq5j5"]
+[ext_resource type="PackedScene" uid="uid://dmugpnwyyqgw7" path="res://Assets/Environment/Path_Stepping_Stone_Env_01.glb" id="6_utqd4"]
+[ext_resource type="PackedScene" uid="uid://cfteepvwgq0ck" path="res://Assets/Environment/Path_Stepping_Stone_Env_02.glb" id="7_u55on"]
+[ext_resource type="PackedScene" uid="uid://bptti8s5ro4om" path="res://Assets/Environment/Path_Gravel_Env_01.glb" id="8_pdma0"]
+[ext_resource type="PackedScene" uid="uid://coc07x7qctgvh" path="res://Assets/Environment/Path_Cobblestone_Env_04.glb" id="9_utqd4"]
+[ext_resource type="PackedScene" uid="uid://b1stv8bifdl5o" path="res://Assets/Environment/Log_Pile_Vege.glb" id="10_u55on"]
+[ext_resource type="PackedScene" uid="uid://cn4rg2vg1xope" path="res://Assets/Environment/Tree_Group_Vege.glb" id="11_u55on"]
+[ext_resource type="PackedScene" uid="uid://dpij3kps8gg2u" path="res://Assets/Environment/Fire_Pit_Env.glb" id="12_pdma0"]
+[ext_resource type="PackedScene" uid="uid://260wqs45rp2h" path="res://Assets/Environment/Chest_Prop.glb" id="13_1jijn"]
+[ext_resource type="PackedScene" uid="uid://css54x7jnu0f" path="res://Assets/Environment/Lamppost_Furn.glb" id="14_20gr8"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fg03p"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -15,6 +28,9 @@ sky = SubResource("Sky_t21ke")
 tonemap_mode = 2
 glow_enabled = true
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fy36t"]
+albedo_color = Color(0.329412, 0.490196, 0.286275, 1)
+
 [node name="Level" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -24,14 +40,100 @@ environment = SubResource("Environment_i4kf4")
 transform = Transform3D(-0.929133, -0.188216, 0.318257, 0, 0.860742, 0.509041, -0.369747, 0.472967, -0.799743, 0, 0, 0)
 shadow_enabled = true
 
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
+[node name="Floor" type="CSGBox3D" parent="."]
 transform = Transform3D(0.996855, 0, 0.0792421, 0, 1, 0, -0.0792421, 0, 0.996855, 0, -0.5, 0)
 use_collision = true
 size = Vector3(50, 1, 50)
+material = SubResource("StandardMaterial3D_fy36t")
 
 [node name="Player" parent="." instance=ExtResource("1_t21ke")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.7829, 1, 12.7205)
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="."]
-transform = Transform3D(0.0619175, 0, 3.50339, 0, 3.525, 0, -0.556566, 0, 0.389749, -3.24683, 1.94537, -4.16807)
-use_collision = true
+[node name="Barrel_Wooden_Prop2" parent="." instance=ExtResource("2_i4kf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.57195, 1.26111, 0)
+
+[node name="Barrel_Wooden_Prop" parent="Barrel_Wooden_Prop2" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.54561, -0.707686, -9.78973)
+
+[node name="Rock_EdgeMap" parent="." instance=ExtResource("3_fy36t")]
+transform = Transform3D(1.27, 0, 0, 0, 1.27, 0, 0, 0, 1.27, -1.06979, 2.89591, -20.6205)
+
+[node name="Rock_Cliff_Env_034" parent="Rock_EdgeMap" instance=ExtResource("3_fy36t")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -11.2764, 0, -5.2537)
+
+[node name="Rock_Cliff_Env_033" parent="Rock_EdgeMap/Rock_Cliff_Env_034" instance=ExtResource("3_fy36t")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -22.2914, 0, -5.2537)
+
+[node name="Rock_EdgeMap2" parent="." instance=ExtResource("3_fy36t")]
+transform = Transform3D(1.27, 0, 0, 0, 1.27, 0, 0, 0, 1.27, -1.06979, 2.89591, 27.9149)
+
+[node name="Rock_Cliff_Env_034" parent="Rock_EdgeMap2" instance=ExtResource("3_fy36t")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -11.2764, 0, -5.2537)
+
+[node name="Rock_Cliff_Env_033" parent="Rock_EdgeMap2/Rock_Cliff_Env_034" instance=ExtResource("3_fy36t")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -22.2914, 0, -5.2537)
+
+[node name="Rock_EdgeMap3" parent="." instance=ExtResource("3_fy36t")]
+transform = Transform3D(-5.55135e-08, 0, -1.27, 0, 1.27, 0, 1.27, 0, -5.55135e-08, -27.5148, 2.89591, 0.556217)
+
+[node name="Rock_Cliff_Env_034" parent="Rock_EdgeMap3" instance=ExtResource("3_fy36t")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -11.2764, 0, -5.2537)
+
+[node name="Rock_Cliff_Env_033" parent="Rock_EdgeMap3/Rock_Cliff_Env_034" instance=ExtResource("3_fy36t")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -22.2914, 0, -5.2537)
+
+[node name="Rock_EdgeMap4" parent="." instance=ExtResource("3_fy36t")]
+transform = Transform3D(-5.55135e-08, 0, -1.27, 0, 1.27, 0, 1.27, 0, -5.55135e-08, 18.1439, 2.89591, 0.556217)
+
+[node name="Rock_Cliff_Env_034" parent="Rock_EdgeMap4" instance=ExtResource("3_fy36t")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -11.2764, 0, -5.2537)
+
+[node name="Rock_Cliff_Env_033" parent="Rock_EdgeMap4/Rock_Cliff_Env_034" instance=ExtResource("3_fy36t")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -22.2914, 0, -5.2537)
+
+[node name="Large_Mountain_Env_022" parent="." instance=ExtResource("4_j32wv")]
+transform = Transform3D(-0.0830889, 0, 0.0460569, 0, 0.095, 0, -0.0460569, 0, -0.0830889, 4.30376, 0.56726, -19.0436)
+
+[node name="House_Modular_012" parent="." instance=ExtResource("5_nq5j5")]
+transform = Transform3D(0.469472, 0, -0.882948, 0, 1, 0, 0.882948, 0, 0.469472, 10.8488, 0.0180912, -2.72008)
+
+[node name="Path_Stepping_Stone_Env_012" parent="." instance=ExtResource("6_utqd4")]
+transform = Transform3D(0.636078, 0, -0.771625, 0, 1, 0, 0.771625, 0, 0.636078, -5.70805, -0.0552392, 7.03305)
+
+[node name="Path_Stepping_Stone_Env_022" parent="." instance=ExtResource("7_u55on")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.99454, -0.0474809, 13.9453)
+
+[node name="Path_Stepping_Stone_Env_023" parent="." instance=ExtResource("7_u55on")]
+transform = Transform3D(-0.350207, 0, 0.936672, 0, 1, 0, -0.936672, 0, -0.350207, -1.72507, -0.0469263, 1.41185)
+
+[node name="Path_Gravel_Env_012" parent="." instance=ExtResource("8_pdma0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.10581, -0.0435423, 2.23156)
+
+[node name="Path_Gravel_Env_013" parent="." instance=ExtResource("8_pdma0")]
+transform = Transform3D(0.594823, 0, -0.803857, 0, 1, 0, 0.803857, 0, 0.594823, -7.54691, -0.0435423, 7.65523)
+
+[node name="Path_Gravel_Env_014" parent="." instance=ExtResource("8_pdma0")]
+transform = Transform3D(0.594823, 0, -0.803857, 0, 1, 0, 0.803857, 0, 0.594823, -5.41322, -0.0435423, 22.0589)
+
+[node name="Path_Cobblestone_Env_042" parent="." instance=ExtResource("9_utqd4")]
+transform = Transform3D(0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, 0.5, 7.64051, -0.0471465, -3.95472)
+
+[node name="Log_Pile_Vege2" parent="." instance=ExtResource("10_u55on")]
+transform = Transform3D(0.882948, 0, 0.469472, 0, 1, 0, -0.469472, 0, 0.882948, 13.3481, 0.109123, -2.41187)
+
+[node name="Log_Pile_Vege3" parent="." instance=ExtResource("10_u55on")]
+transform = Transform3D(0.882948, 0, 0.469472, 0, 1, 0, -0.469472, 0, 0.882948, 15.5168, 0.109123, -3.48378)
+
+[node name="Tree_Group_Vege2" parent="." instance=ExtResource("11_u55on")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.6587, -0.266353, -7.57569)
+
+[node name="Fire_Pit_Env2" parent="." instance=ExtResource("12_pdma0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.8763, 0.0827386, 16.479)
+
+[node name="Chest_Prop2" parent="." instance=ExtResource("13_1jijn")]
+transform = Transform3D(-0.953717, 0, 0.300706, 0, 1, 0, -0.300706, 0, -0.953717, -18.8692, 0.00287595, -12.7063)
+
+[node name="Lamppost_Furn2" parent="." instance=ExtResource("14_20gr8")]
+transform = Transform3D(-0.87462, 0, 0.48481, 0, 1, 0, -0.48481, 0, -0.87462, -2.69809, -1.90735e-06, 13.5428)
+
+[editable path="Barrel_Wooden_Prop2"]

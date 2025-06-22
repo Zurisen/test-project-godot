@@ -8,9 +8,14 @@ public partial class Player : CharacterBody3D
 
 	public float MouseSensitivity = 0.003f;
 
+	[Export]
+	private float _movementAnimationDecay = 10f;
+
 	private Vector2 _look = Vector2.Zero;
 	private Node3D _horizontalPivot;
 	private Node3D _verticalPivot;
+	private Node3D _rigPivot;
+	
 
 	public override void _Ready()
 	{
@@ -18,6 +23,7 @@ public partial class Player : CharacterBody3D
 
 		_horizontalPivot = GetNode<Node3D>("HorizontalPivot");
 		_verticalPivot = GetNode<Node3D>("HorizontalPivot/VerticalPivot");
+		_rigPivot = GetNode<Node3D>("RigPivot");
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 	}
 
@@ -43,6 +49,7 @@ public partial class Player : CharacterBody3D
 		{
 			velocity.X = direction.X * Speed;
 			velocity.Z = direction.Z * Speed;
+			_lookTowardDirection(direction, delta);
 		}
 		else
 		{
@@ -78,6 +85,19 @@ public partial class Player : CharacterBody3D
 		_verticalPivot.Rotation = new Vector3(newPitch, _verticalPivot.Rotation.Y, _verticalPivot.Rotation.Z);
 
 		_look = Vector2.Zero;
+	}
+
+	private void _lookTowardDirection(Vector3 direction, double delta)
+	{
+		var targetTrasform = _rigPivot.GlobalTransform.LookingAt(
+			_rigPivot.GlobalPosition - direction, Vector3.Up, true
+		);
+
+		// _rigPivot.GlobalTransform = new Transform3D(targetTrasform.Basis, _rigPivot.GlobalTransform.Origin);
+		_rigPivot.GlobalTransform = _rigPivot.GlobalTransform.InterpolateWith(targetTrasform,
+            (float)(1 - Mathf.Exp(-_movementAnimationDecay * delta))
+		 );
+
 	}
 
 	private Vector3 _handleMovement()

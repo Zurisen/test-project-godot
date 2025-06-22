@@ -11,7 +11,7 @@ public partial class SmoothCameraArm : SpringArm3D
     public override void _PhysicsProcess(double delta)
     {
         base._PhysicsProcess(delta);
-        this.GlobalTransform = GlobalTransform.InterpolateWith(
+        this.GlobalTransform = this.GlobalTransform.InterpolateWith(
             _target.GlobalTransform,
             (float)(1 - Mathf.Exp(-_decay * delta))
             );
