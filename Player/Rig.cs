@@ -6,7 +6,7 @@ public partial class Rig : Node3D
     private AnimationTree _animationTree;
     private AnimationNodeStateMachinePlayback _playback;
     private string _runPath;
-    private float run_weight_target = -1.0f;
+    private float _runWeightTarget = -1.0f;
 
     [Export]
     private double _animationBlendDecay = 10;
@@ -28,7 +28,7 @@ public partial class Rig : Node3D
         var blendPosition = _animationTree.Get(_runPath);
         var blendMovement = Mathf.MoveToward(
             blendPosition.As<float>(),
-            run_weight_target,
+            _runWeightTarget,
             delta * _animationBlendDecay
         );
         _animationTree.Set(_runPath, blendMovement);
@@ -38,11 +38,11 @@ public partial class Rig : Node3D
     {
         if (direction.IsZeroApprox())
         {
-            run_weight_target = -1.0f;
+            _runWeightTarget = -1.0f;
         }
         else
         {
-            run_weight_target = 1.0f;
+            _runWeightTarget = 1.0f;
         }
 
     }

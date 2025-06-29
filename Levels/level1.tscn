@@ -32,6 +32,7 @@ glow_enabled = true
 albedo_color = Color(0.329412, 0.490196, 0.286275, 1)
 
 [node name="Level" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00270939, 0.0189898, -0.00273228)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_i4kf4")

@@ -39,12 +39,6 @@ public partial class Player : CharacterBody3D
 			velocity += GetGravity() * (float)delta;
 		}
 
-		// Handle Jump.
-		if (Input.IsActionJustPressed("ui_accept") && IsOnFloor())
-		{
-			velocity.Y = JumpVelocity;
-		}
-
 		Vector3 direction = _handleMovement();
 		_characterRig.UpdateAnimationTree(direction);
 		if (direction != Vector3.Zero)
@@ -80,6 +74,10 @@ public partial class Player : CharacterBody3D
 			{
 				_slashAttack();
 			}
+			if (@event.IsActionPressed("ui_accept") && IsOnFloor())
+			{
+				_dash();
+			}
 		}
 	}
 
@@ -113,6 +111,11 @@ public partial class Player : CharacterBody3D
 	private void _slashAttack()
 	{
 		_characterRig.Travel("Slash");
+	}
+
+	private void _dash()
+	{
+		_characterRig.Travel("Dash");
 	}
 
 	private Vector3 _handleMovement()
