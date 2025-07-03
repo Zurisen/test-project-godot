@@ -10,12 +10,19 @@ public partial class Player : CharacterBody3D
 
 	[Export]
 	private float _movementAnimationDecay = 10f;
+	[Export]
+	private float _slashMoveSpeed = 0.3f;
+	[Export]
+	private float _dashMoveSpeed = 1.6f;
 
 	private Vector2 _look = Vector2.Zero;
 	private Node3D _horizontalPivot;
 	private Node3D _verticalPivot;
 	private Node3D _rigPivot;
 	private Rig _characterRig;
+	private AttackCast _attackCast;
+
+	private Vector3 _movementDirection = Vector3.Zero;
 
 	public override void _Ready()
 	{
@@ -25,7 +32,9 @@ public partial class Player : CharacterBody3D
 		_verticalPivot = GetNode<Node3D>("HorizontalPivot/VerticalPivot");
 		_rigPivot = GetNode<Node3D>("RigPivot");
 		_characterRig = GetNode<Rig>("RigPivot/CharacterRig");
+		_attackCast = GetNode<AttackCast>("RigPivot/CharacterRig/RayAttachment/AttackCast");
 		Input.MouseMode = Input.MouseModeEnum.Captured;
+
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -33,27 +42,18 @@ public partial class Player : CharacterBody3D
 		Vector3 velocity = Velocity;
 		_handleCameraRotation();
 
+
+		Vector3 direction = _handleMovement();
+		_characterRig.UpdateAnimationTree(direction);
+
+		_handleIdlePhysicsFrame(delta, velocity, direction);
+		_handleSlashingPhysicsFrame(delta);
+		_handleDashingPhysicsFrame(delta);
 		// Add the gravity.
 		if (!IsOnFloor())
 		{
 			velocity += GetGravity() * (float)delta;
 		}
-
-		Vector3 direction = _handleMovement();
-		_characterRig.UpdateAnimationTree(direction);
-		if (direction != Vector3.Zero)
-		{
-			velocity.X = direction.X * Speed;
-			velocity.Z = direction.Z * Speed;
-			_lookTowardDirection(direction, delta);
-		}
-		else
-		{
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
-			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, Speed);
-		}
-
-		Velocity = velocity;
 		MoveAndSlide();
 	}
 
@@ -103,7 +103,7 @@ public partial class Player : CharacterBody3D
 
 		// _rigPivot.GlobalTransform = new Transform3D(targetTrasform.Basis, _rigPivot.GlobalTransform.Origin);
 		_rigPivot.GlobalTransform = _rigPivot.GlobalTransform.InterpolateWith(targetTrasform,
-            (float)(1 - Mathf.Exp(-_movementAnimationDecay * delta))
+			(float)(1 - Mathf.Exp(-_movementAnimationDecay * delta))
 		 );
 
 	}
@@ -111,11 +111,14 @@ public partial class Player : CharacterBody3D
 	private void _slashAttack()
 	{
 		_characterRig.Travel("Slash");
+		_movementDirection = _getMovementDirection();
+		_attackCast.ClearExceptions();
 	}
 
 	private void _dash()
 	{
 		_characterRig.Travel("Dash");
+		_movementDirection = _getMovementDirection();
 	}
 
 	private Vector3 _handleMovement()
@@ -123,5 +126,48 @@ public partial class Player : CharacterBody3D
 		Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
 		Vector3 direction = (_horizontalPivot.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 		return direction;
+	}
+
+	private void _handleSlashingPhysicsFrame(double delta)
+	{
+		if (!_characterRig.isSlashing()) return;
+
+		Velocity = _movementDirection * _slashMoveSpeed * Speed;
+		_lookTowardDirection(_movementDirection, delta);
+		_attackCast.DealDamage();
+	}
+
+	private void _handleDashingPhysicsFrame(double delta)
+	{
+		if (!_characterRig.isDashing()) return;
+
+		Velocity = _movementDirection * _dashMoveSpeed*Speed;
+		_lookTowardDirection(_movementDirection, delta);
+	}
+
+	private void _handleIdlePhysicsFrame(double delta, Vector3 velocity, Vector3 direction)
+	{
+		if (!_characterRig.isIdle()) return;
+		if (direction != Vector3.Zero)
+		{
+			velocity.X = direction.X * Speed;
+			velocity.Z = direction.Z * Speed;
+			_lookTowardDirection(direction, delta);
+		}
+		else
+		{
+			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
+			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, Speed);
+		}
+		Velocity = velocity;
+	}
+
+	private Vector3 _getMovementDirection()
+	{
+		Vector3 velocity = Velocity;
+		velocity.Y = 0;
+
+		Vector3 rigFacingForward = _characterRig.GlobalBasis * new Vector3(0, 0, 1);
+		return velocity.Length() > 0.001f ? Velocity.Normalized() : rigFacingForward;
 	}
 }

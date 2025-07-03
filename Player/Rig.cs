@@ -56,4 +56,14 @@ public partial class Rig : Node3D
     {
         return _playback.GetCurrentNode() == "MoveSpace";
     }
+
+    public bool isSlashing()
+    {
+        return _playback.GetCurrentNode() == "Slash";
+    }
+
+    public bool isDashing()
+    {
+        return _playback.GetCurrentNode() == "Dash";
+    }
 }
