@@ -35,6 +35,7 @@ public partial class Player : CharacterBody3D
 		_attackCast = GetNode<AttackCast>("RigPivot/CharacterRig/RayAttachment/AttackCast");
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 
+		_characterRig.SetActiveMesh(_characterRig.KnightMeshInstances[0]);
 	}
 
 	public override void _PhysicsProcess(double delta)

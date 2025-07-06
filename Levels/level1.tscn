@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://ry0lvvrsbro7"]
+[gd_scene load_steps=20 format=3 uid="uid://ry0lvvrsbro7"]
 
 [ext_resource type="PackedScene" uid="uid://bb6mbofwl8l13" path="res://Player/player.tscn" id="1_t21ke"]
 [ext_resource type="PackedScene" uid="uid://2ossp74oraxn" path="res://Assets/Environment/Barrel_Wooden_Prop.glb" id="2_i4kf4"]
@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://dpij3kps8gg2u" path="res://Assets/Environment/Fire_Pit_Env.glb" id="12_pdma0"]
 [ext_resource type="PackedScene" uid="uid://260wqs45rp2h" path="res://Assets/Environment/Chest_Prop.glb" id="13_1jijn"]
 [ext_resource type="PackedScene" uid="uid://css54x7jnu0f" path="res://Assets/Environment/Lamppost_Furn.glb" id="14_20gr8"]
+[ext_resource type="PackedScene" uid="uid://jp0vkw8qus6s" path="res://Enemy/enemy.tscn" id="15_ts5l0"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fg03p"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -66,10 +67,10 @@ transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -11.27
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -22.2914, 0, -5.2537)
 
 [node name="Rock_EdgeMap2" parent="." instance=ExtResource("3_fy36t")]
-transform = Transform3D(1.27, 0, 0, 0, 1.27, 0, 0, 0, 1.27, -1.06979, 2.89591, 27.9149)
+transform = Transform3D(1.27, 0, 0, 0, 1.27, 0, 0, 0, 1.27, -1.06979, 2.89591, 23.928)
 
 [node name="Rock_Cliff_Env_034" parent="Rock_EdgeMap2" instance=ExtResource("3_fy36t")]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -11.2764, 0, -5.2537)
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -11.2764, 0, -2.6343)
 
 [node name="Rock_Cliff_Env_033" parent="Rock_EdgeMap2/Rock_Cliff_Env_034" instance=ExtResource("3_fy36t")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -22.2914, 0, -5.2537)
@@ -136,5 +137,19 @@ transform = Transform3D(-0.953717, 0, 0.300706, 0, 1, 0, -0.300706, 0, -0.953717
 
 [node name="Lamppost_Furn2" parent="." instance=ExtResource("14_20gr8")]
 transform = Transform3D(-0.87462, 0, 0.48481, 0, 1, 0, -0.48481, 0, -0.87462, -2.69809, -1.90735e-06, 13.5428)
+
+[node name="Node3D" type="Node3D" parent="."]
+
+[node name="Enemy" parent="Node3D" instance=ExtResource("15_ts5l0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01255, 4.12888)
+
+[node name="Enemy2" parent="Node3D" instance=ExtResource("15_ts5l0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 7.75217)
+
+[node name="Enemy3" parent="Node3D" instance=ExtResource("15_ts5l0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.13859, 0.902525, 0.763409)
+
+[node name="Enemy4" parent="Node3D" instance=ExtResource("15_ts5l0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.34506, 1, 6.70468)
 
 [editable path="Barrel_Wooden_Prop2"]

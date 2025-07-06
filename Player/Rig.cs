@@ -7,9 +7,13 @@ public partial class Rig : Node3D
     private AnimationNodeStateMachinePlayback _playback;
     private string _runPath;
     private float _runWeightTarget = -1.0f;
+    private Skeleton3D _skeleton3D;
 
     [Export]
     private double _animationBlendDecay = 10;
+
+    public MeshInstance3D[] KnightMeshInstances;
+    public MeshInstance3D[] VillagerMeshInstances;
 
     public override void _Ready()
     {
@@ -18,6 +22,17 @@ public partial class Rig : Node3D
         _animationTree = GetNode<AnimationTree>("AnimationTree");
         _playback = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
         _runPath = "parameters/MoveSpace/blend_position";
+        _skeleton3D = GetNode<Skeleton3D>("CharacterRig/GameRig/Skeleton3D");
+
+        KnightMeshInstances = [
+            GetNode<MeshInstance3D>("CharacterRig/GameRig/Skeleton3D/Knight_01"),
+            GetNode<MeshInstance3D>("CharacterRig/GameRig/Skeleton3D/Knight_02")
+        ];
+
+        VillagerMeshInstances = [
+            GetNode<MeshInstance3D>("CharacterRig/GameRig/Skeleton3D/Villager_01"),
+            GetNode<MeshInstance3D>("CharacterRig/GameRig/Skeleton3D/Villager_02")
+        ];
 
     }
 
@@ -66,4 +81,18 @@ public partial class Rig : Node3D
     {
         return _playback.GetCurrentNode() == "Dash";
     }
+
+
+    public void SetActiveMesh(MeshInstance3D activeMesh)
+    {
+        foreach (var childMesh in _skeleton3D.GetChildren())
+        {
+            if (childMesh is MeshInstance3D mesh)
+            {
+                mesh.Visible = false;
+            }
+        }
+        activeMesh.Visible = true;
+    }
+
 }
