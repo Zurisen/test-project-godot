@@ -4,6 +4,7 @@ using System.Linq;
 
 public partial class Enemy : CharacterBody3D
 {
+    public HealthComponent HealthComponent;
 
     [Export]
     private float _maxHealth = 20;
@@ -11,7 +12,6 @@ public partial class Enemy : CharacterBody3D
 
     private Rig _characterRig;
     private Random _random;
-    private HealthComponent _healthComponent;
     public override void _Ready()
     {
         base._Ready();
@@ -21,8 +21,16 @@ public partial class Enemy : CharacterBody3D
         int randomIdx = _random.Next(_characterRig.VillagerMeshInstances.Length);
         _characterRig.SetActiveMesh(_characterRig.VillagerMeshInstances[randomIdx]);
 
-        _healthComponent = GetNode<HealthComponent>("HealthComponent");
-        _healthComponent.MaxHealth = _maxHealth;
+        HealthComponent = GetNode<HealthComponent>("HealthComponent");
+        HealthComponent.MaxHealth = _maxHealth;
+
+        HealthComponent.Defeat += DefeatEvent;
+
+    }
+
+    private void DefeatEvent()
+    {
+        _characterRig.Travel("Defeat");
 
     }
 

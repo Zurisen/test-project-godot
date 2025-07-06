@@ -8,10 +8,15 @@ public partial class AttackCast : RayCast3D
         if (!IsColliding()) return;
 
         var collider = GetCollider();
-        GD.Print($"Damage Dealt! to {collider}");
-        if (collider is CollisionObject3D collisionObject)
+
+        if (collider is Enemy enemy)
         {
-            AddException(collisionObject);
+            enemy.HealthComponent.TakeDamage(10);
         }
+
+        if (collider is CollisionObject3D collisionObject)
+            {
+                AddException(collisionObject);
+            }
     }
 }

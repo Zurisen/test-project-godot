@@ -82,6 +82,11 @@ public partial class Rig : Node3D
         return _playback.GetCurrentNode() == "Dash";
     }
 
+    public bool isDead()
+    {
+        return _playback.GetCurrentNode() == "Defeat";
+    }
+
 
     public void SetActiveMesh(MeshInstance3D activeMesh)
     {
