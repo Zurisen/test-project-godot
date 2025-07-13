@@ -1,13 +1,15 @@
 using System;
 using Godot;
 
-public partial class Player : CharacterBody3D
+public partial class Player : CharacterBody3D, IDamageable
 {
+	public HealthComponent HealthComponent { get; set; }
 	public const float Speed = 5.0f;
 	public const float JumpVelocity = 4.5f;
-
 	public float MouseSensitivity = 0.003f;
 
+	[Export]
+	private float _maxHealth = 20;
 	[Export]
 	private float _movementAnimationDecay = 10f;
 	[Export]
@@ -21,7 +23,7 @@ public partial class Player : CharacterBody3D
 	private Node3D _rigPivot;
 	private Rig _characterRig;
 	private AttackCast _attackCast;
-
+    private CollisionShape3D _collisionShape3D;
 	private Vector3 _movementDirection = Vector3.Zero;
 
 	public override void _Ready()
@@ -32,8 +34,13 @@ public partial class Player : CharacterBody3D
 		_verticalPivot = GetNode<Node3D>("HorizontalPivot/VerticalPivot");
 		_rigPivot = GetNode<Node3D>("RigPivot");
 		_characterRig = GetNode<Rig>("RigPivot/CharacterRig");
+        _collisionShape3D = GetNode<CollisionShape3D>("CollisionShape3D");
 		_attackCast = GetNode<AttackCast>("RigPivot/CharacterRig/RayAttachment/AttackCast");
 		Input.MouseMode = Input.MouseModeEnum.Captured;
+
+        HealthComponent = GetNode<HealthComponent>("HealthComponent");
+		HealthComponent.MaxHealth = _maxHealth;
+		HealthComponent.Defeat += _defeatEvent;
 
 		_characterRig.SetActiveMesh(_characterRig.KnightMeshInstances[0]);
 	}
@@ -81,6 +88,14 @@ public partial class Player : CharacterBody3D
 			}
 		}
 	}
+
+    private void _defeatEvent()
+    {
+        _characterRig.Travel("Defeat");
+		_collisionShape3D.Disabled = true;
+        SetPhysicsProcess(false);
+
+    }
 
 	private void _handleCameraRotation()
 	{

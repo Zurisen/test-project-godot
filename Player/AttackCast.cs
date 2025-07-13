@@ -9,14 +9,14 @@ public partial class AttackCast : RayCast3D
 
         var collider = GetCollider();
 
-        if (collider is Enemy enemy)
+        if (collider is IDamageable entity)
         {
-            enemy.HealthComponent.TakeDamage(10);
+            entity.HealthComponent.TakeDamage(10);
         }
 
         if (collider is CollisionObject3D collisionObject)
-            {
-                AddException(collisionObject);
-            }
+        {
+            AddException(collisionObject);
+        }
     }
 }

@@ -12,6 +12,9 @@ public partial class Rig : Node3D
     [Export]
     private double _animationBlendDecay = 10;
 
+    [Signal]
+    public delegate void HeavyAttackEventHandler();
+
     public MeshInstance3D[] KnightMeshInstances;
     public MeshInstance3D[] VillagerMeshInstances;
 
@@ -23,7 +26,7 @@ public partial class Rig : Node3D
         _playback = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
         _runPath = "parameters/MoveSpace/blend_position";
         _skeleton3D = GetNode<Skeleton3D>("CharacterRig/GameRig/Skeleton3D");
-
+        
         KnightMeshInstances = [
             GetNode<MeshInstance3D>("CharacterRig/GameRig/Skeleton3D/Knight_01"),
             GetNode<MeshInstance3D>("CharacterRig/GameRig/Skeleton3D/Knight_02")
@@ -100,4 +103,12 @@ public partial class Rig : Node3D
         activeMesh.Visible = true;
     }
 
+    private void OnAnimationTreeAnimationFinished(string animationName)
+    {
+        if (animationName == "Overhead")
+        {
+            EmitSignal(SignalName.HeavyAttack);
+        }
+    }
+    
 }
