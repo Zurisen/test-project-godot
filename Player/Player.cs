@@ -4,12 +4,13 @@ using Godot;
 public partial class Player : CharacterBody3D, IDamageable
 {
 	public HealthComponent HealthComponent { get; set; }
-	public const float Speed = 5.0f;
-	public const float JumpVelocity = 4.5f;
+	public Rig CharacterRig;
+	public float Speed = 5.0f;
+	public float JumpVelocity = 4.5f;
 	public float MouseSensitivity = 0.003f;
 
 	[Export]
-	private float _maxHealth = 20;
+	private float _maxHealth = 40;
 	[Export]
 	private float _movementAnimationDecay = 10f;
 	[Export]
@@ -21,8 +22,8 @@ public partial class Player : CharacterBody3D, IDamageable
 	private Node3D _horizontalPivot;
 	private Node3D _verticalPivot;
 	private Node3D _rigPivot;
-	private Rig _characterRig;
 	private AttackCast _attackCast;
+	private AreaAttack _areaAttack;
     private CollisionShape3D _collisionShape3D;
 	private Vector3 _movementDirection = Vector3.Zero;
 
@@ -33,16 +34,18 @@ public partial class Player : CharacterBody3D, IDamageable
 		_horizontalPivot = GetNode<Node3D>("HorizontalPivot");
 		_verticalPivot = GetNode<Node3D>("HorizontalPivot/VerticalPivot");
 		_rigPivot = GetNode<Node3D>("RigPivot");
-		_characterRig = GetNode<Rig>("RigPivot/CharacterRig");
+		CharacterRig = GetNode<Rig>("RigPivot/CharacterRig");
         _collisionShape3D = GetNode<CollisionShape3D>("CollisionShape3D");
 		_attackCast = GetNode<AttackCast>("RigPivot/CharacterRig/RayAttachment/AttackCast");
+		_areaAttack = GetNode<AreaAttack>("RigPivot/CharacterRig/AreaAttack");
+		CharacterRig.HeavyAttack += OnRigHeavyAttack;
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 
         HealthComponent = GetNode<HealthComponent>("HealthComponent");
 		HealthComponent.MaxHealth = _maxHealth;
 		HealthComponent.Defeat += _defeatEvent;
 
-		_characterRig.SetActiveMesh(_characterRig.KnightMeshInstances[0]);
+		CharacterRig.SetActiveMesh(CharacterRig.KnightMeshInstances[0]);
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -52,11 +55,11 @@ public partial class Player : CharacterBody3D, IDamageable
 
 
 		Vector3 direction = _handleMovement();
-		_characterRig.UpdateAnimationTree(direction);
+		CharacterRig.UpdateAnimationTree(direction);
 
 		_handleIdlePhysicsFrame(delta, velocity, direction);
 		_handleSlashingPhysicsFrame(delta);
-		_handleDashingPhysicsFrame(delta);
+		_handleAreaAttackPhysicsFrame(delta);
 		// Add the gravity.
 		if (!IsOnFloor())
 		{
@@ -76,22 +79,22 @@ public partial class Player : CharacterBody3D, IDamageable
 			}
 		}
 
-		if (_characterRig.isIdle())
+		if (CharacterRig.isIdle())
 		{
 			if (@event.IsActionPressed("attack_melee"))
 			{
 				_slashAttack();
 			}
-			if (@event.IsActionPressed("ui_accept") && IsOnFloor())
+			if (@event.IsActionPressed("attack_heavy"))
 			{
-				_dash();
+				_heavyAttack();
 			}
 		}
 	}
 
     private void _defeatEvent()
     {
-        _characterRig.Travel("Defeat");
+        CharacterRig.Travel("Defeat");
 		_collisionShape3D.Disabled = true;
         SetPhysicsProcess(false);
 
@@ -126,15 +129,21 @@ public partial class Player : CharacterBody3D, IDamageable
 
 	private void _slashAttack()
 	{
-		_characterRig.Travel("Slash");
-		_movementDirection = _getMovementDirection();
+		CharacterRig.Travel("Slash");
+		_movementDirection = GetMovementDirection();
 		_attackCast.ClearExceptions();
 	}
 
-	private void _dash()
+	private void _heavyAttack()
 	{
-		_characterRig.Travel("Dash");
-		_movementDirection = _getMovementDirection();
+		CharacterRig.Travel("Overhead");
+		_movementDirection = GetMovementDirection();
+		_attackCast.ClearExceptions();
+	}
+
+	private void OnRigHeavyAttack()
+	{
+		_areaAttack.DealDamage(50);
 	}
 
 	private Vector3 _handleMovement()
@@ -146,24 +155,25 @@ public partial class Player : CharacterBody3D, IDamageable
 
 	private void _handleSlashingPhysicsFrame(double delta)
 	{
-		if (!_characterRig.isSlashing()) return;
+		if (!CharacterRig.isSlashing()) return;
 
 		Velocity = _movementDirection * _slashMoveSpeed * Speed;
 		_lookTowardDirection(_movementDirection, delta);
 		_attackCast.DealDamage();
 	}
 
-	private void _handleDashingPhysicsFrame(double delta)
+	private void _handleAreaAttackPhysicsFrame(double delta)
 	{
-		if (!_characterRig.isDashing()) return;
+		if (!CharacterRig.isOverhead()) return;
 
-		Velocity = _movementDirection * _dashMoveSpeed*Speed;
+		Velocity = _movementDirection * 0f;
 		_lookTowardDirection(_movementDirection, delta);
+
 	}
 
 	private void _handleIdlePhysicsFrame(double delta, Vector3 velocity, Vector3 direction)
 	{
-		if (!_characterRig.isIdle()) return;
+		if (!CharacterRig.isIdle()) return;
 		if (direction != Vector3.Zero)
 		{
 			velocity.X = direction.X * Speed;
@@ -178,12 +188,12 @@ public partial class Player : CharacterBody3D, IDamageable
 		Velocity = velocity;
 	}
 
-	private Vector3 _getMovementDirection()
+	public Vector3 GetMovementDirection()
 	{
 		Vector3 velocity = Velocity;
 		velocity.Y = 0;
 
-		Vector3 rigFacingForward = _characterRig.GlobalBasis * new Vector3(0, 0, 1);
+		Vector3 rigFacingForward = CharacterRig.GlobalBasis * new Vector3(0, 0, 1);
 		return velocity.Length() > 0.001f ? Velocity.Normalized() : rigFacingForward;
 	}
 }

@@ -85,6 +85,11 @@ public partial class Rig : Node3D
         return _playback.GetCurrentNode() == "Dash";
     }
 
+    public bool isOverhead()
+    {
+        return _playback.GetCurrentNode() == "Overhead";
+    }
+
     public bool isDead()
     {
         return _playback.GetCurrentNode() == "Defeat";

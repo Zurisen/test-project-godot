@@ -75,7 +75,7 @@ public partial class Enemy : CharacterBody3D, IDamageable
 
     private void OnRigHeavyAttack()
     {
-        _areaAttack.DealDamage();
+        _areaAttack.DealDamage(20);
     }
 
 }
