@@ -3,11 +3,13 @@ using Godot;
 
 public partial class Player : CharacterBody3D, IDamageable
 {
-	public HealthComponent HealthComponent { get; set; }
+	public const float Speed = 5.0f;
+	public const float JumpVelocity = 4.5f;
+	public const float MouseSensitivity = 0.003f;
+	public const double Decay = 8;
+
 	public Rig CharacterRig;
-	public float Speed = 5.0f;
-	public float JumpVelocity = 4.5f;
-	public float MouseSensitivity = 0.003f;
+	public HealthComponent HealthComponent { get; set; }
 
 	[Export]
 	private float _maxHealth = 40;
@@ -24,7 +26,7 @@ public partial class Player : CharacterBody3D, IDamageable
 	private Node3D _rigPivot;
 	private AttackCast _attackCast;
 	private AreaAttack _areaAttack;
-    private CollisionShape3D _collisionShape3D;
+	private CollisionShape3D _collisionShape3D;
 	private Vector3 _movementDirection = Vector3.Zero;
 
 	public override void _Ready()
@@ -35,13 +37,13 @@ public partial class Player : CharacterBody3D, IDamageable
 		_verticalPivot = GetNode<Node3D>("HorizontalPivot/VerticalPivot");
 		_rigPivot = GetNode<Node3D>("RigPivot");
 		CharacterRig = GetNode<Rig>("RigPivot/CharacterRig");
-        _collisionShape3D = GetNode<CollisionShape3D>("CollisionShape3D");
+		_collisionShape3D = GetNode<CollisionShape3D>("CollisionShape3D");
 		_attackCast = GetNode<AttackCast>("RigPivot/CharacterRig/RayAttachment/AttackCast");
 		_areaAttack = GetNode<AreaAttack>("RigPivot/CharacterRig/AreaAttack");
 		CharacterRig.HeavyAttack += OnRigHeavyAttack;
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 
-        HealthComponent = GetNode<HealthComponent>("HealthComponent");
+		HealthComponent = GetNode<HealthComponent>("HealthComponent");
 		HealthComponent.MaxHealth = _maxHealth;
 		HealthComponent.Defeat += _defeatEvent;
 
@@ -92,13 +94,13 @@ public partial class Player : CharacterBody3D, IDamageable
 		}
 	}
 
-    private void _defeatEvent()
-    {
-        CharacterRig.Travel("Defeat");
+	private void _defeatEvent()
+	{
+		CharacterRig.Travel("Defeat");
 		_collisionShape3D.Disabled = true;
-        SetPhysicsProcess(false);
+		SetPhysicsProcess(false);
 
-    }
+	}
 
 	private void _handleCameraRotation()
 	{
@@ -173,18 +175,16 @@ public partial class Player : CharacterBody3D, IDamageable
 
 	private void _handleIdlePhysicsFrame(double delta, Vector3 velocity, Vector3 direction)
 	{
-		if (!CharacterRig.isIdle()) return;
+		if (!CharacterRig.isIdle() && !CharacterRig.isDashing()) return;
+
+		velocity.X = ExponentialDecay(velocity.X, direction.X * Speed, Decay, delta);
+		velocity.Z = ExponentialDecay(velocity.Z, direction.Z * Speed, Decay, delta);
+
 		if (direction != Vector3.Zero)
 		{
-			velocity.X = direction.X * Speed;
-			velocity.Z = direction.Z * Speed;
 			_lookTowardDirection(direction, delta);
 		}
-		else
-		{
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
-			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, Speed);
-		}
+
 		Velocity = velocity;
 	}
 
@@ -195,5 +195,10 @@ public partial class Player : CharacterBody3D, IDamageable
 
 		Vector3 rigFacingForward = CharacterRig.GlobalBasis * new Vector3(0, 0, 1);
 		return velocity.Length() > 0.001f ? Velocity.Normalized() : rigFacingForward;
+	}
+
+	public float ExponentialDecay(double a, double b, double decay, double delta)
+	{
+		return (float)(b + (a - b) * Math.Exp(-decay * delta));
 	}
 }
