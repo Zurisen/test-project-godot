@@ -19,6 +19,9 @@ public partial class Player : CharacterBody3D, IDamageable
 	private float _slashMoveSpeed = 0.3f;
 	[Export]
 	private float _dashMoveSpeed = 1.6f;
+	[ExportCategory("RPG Stats")]
+	[Export]
+	private CharacterStats _characterStats;
 
 	private Vector2 _look = Vector2.Zero;
 	private Node3D _horizontalPivot;
