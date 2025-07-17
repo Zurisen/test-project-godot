@@ -20,6 +20,7 @@ public partial class Player : CharacterBody3D, IDamageable
 	[Export]
 	private float _dashMoveSpeed = 1.6f;
 	[ExportCategory("RPG Stats")]
+
 	[Export]
 	private CharacterStats _characterStats;
 
@@ -51,6 +52,8 @@ public partial class Player : CharacterBody3D, IDamageable
 		HealthComponent.Defeat += _defeatEvent;
 
 		CharacterRig.SetActiveMesh(CharacterRig.KnightMeshInstances[0]);
+
+		GD.Print("Speed:", _characterStats.Speed.Value);
 	}
 
 	public override void _PhysicsProcess(double delta)
