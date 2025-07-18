@@ -8,12 +8,15 @@ public partial class Enemy : CharacterBody3D, IDamageable
 
     [Export]
     private float _maxHealth = 20;
+    [Export]
+    private long _xpValue = 30;
 
     private Rig _characterRig;
     private CollisionShape3D _collisionShape3D;
     private ShapeCast3D _playerDetector;
     private Random _random;
     private AreaAttack _areaAttack;
+    private Player _player;
 
     public override void _Ready()
     {
@@ -24,6 +27,7 @@ public partial class Enemy : CharacterBody3D, IDamageable
         _collisionShape3D = GetNode<CollisionShape3D>("CollisionShape3D");
         _playerDetector = GetNode<ShapeCast3D>("Rig/PlayerDetector");
         _areaAttack = GetNode<AreaAttack>("Rig/AreaAttack");
+        _player = GetTree().GetFirstNodeInGroup("PlayersGroup") as Player;
 
         int randomIdx = _random.Next(_characterRig.VillagerMeshInstances.Length);
         _characterRig.SetActiveMesh(_characterRig.VillagerMeshInstances[randomIdx]);
@@ -70,6 +74,8 @@ public partial class Enemy : CharacterBody3D, IDamageable
         _characterRig.Travel("Defeat");
         _collisionShape3D.Disabled = true;
         SetPhysicsProcess(false);
+        _player.CharacterStats.Xp += _xpValue;
+
 
     }
 

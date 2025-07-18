@@ -4,17 +4,44 @@ using System;
 [GlobalClass]
 public partial class CharacterStats : Resource
 {
+    private int _maxLevel = 60;
     private int _level;
     public int Level
     {
         get => _level;
-        set => _level = Math.Clamp(value, 0, 60);
+        set => _level = Math.Clamp(value, 0, _maxLevel);
     }
-    public Stat Xp = new Stat(0, 1000);
-    public Stat Strength = new Stat(0, 10000);
+
+    private long _xp = 0;
+    public long Xp
+    {
+        get => _xp;
+        set
+        {
+            if (_xp + value >= PercentageLvlUpBoundary())
+            {
+                _xp = 0;
+                LevelUp();
+            }
+            else
+            {
+                _xp += value;
+            }
+            GD.Print("XP: ", _xp, "/", PercentageLvlUpBoundary());
+        }
+    }
+
+    // Damage bonus on attack
+    public Stat Strength = new Stat(2, 12);
+
+    // Movement Speed m/s
     public Stat Speed = new Stat(3, 4);
-    public Stat Endurance = new Stat(0, 100);
-    public Stat Agility = new Stat(0, 10000);
+
+    // HP Bonus per level
+    public Stat Endurance = new Stat(5, 25);
+
+    // Crit chance
+    public Stat Agility = new Stat(0.05f, 0.25f);
     public class Stat
     {
         private float _minModifier;
@@ -32,6 +59,10 @@ public partial class CharacterStats : Resource
             _maxModifier = maxModifier;
         }
 
+        public void Increase()
+        {
+            Value = _value + (float)GD.RandRange(2.0, 5.0);
+        }
 
         private float _GetModifier()
         {
@@ -44,6 +75,24 @@ public partial class CharacterStats : Resource
 
         }
 
+    }
+
+    public void LevelUp()
+    {
+        if (Level >= _maxLevel) return;
+
+        Level += 1;
+        Strength.Increase();
+        Agility.Increase();
+        Endurance.Increase();
+        Speed.Increase();
+
+        GD.PrintT(Strength.Value, Agility.Value, Speed.Value, Endurance.Value);
+    }
+
+    public long PercentageLvlUpBoundary()
+    {
+        return (long) (50 * Math.Pow(1.2f, Level));
     }
 
 }

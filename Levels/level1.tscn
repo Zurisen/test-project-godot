@@ -1,7 +1,8 @@
-[gd_scene load_steps=20 format=3 uid="uid://ry0lvvrsbro7"]
+[gd_scene load_steps=22 format=3 uid="uid://ry0lvvrsbro7"]
 
 [ext_resource type="PackedScene" uid="uid://bb6mbofwl8l13" path="res://Player/player.tscn" id="1_t21ke"]
 [ext_resource type="PackedScene" uid="uid://2ossp74oraxn" path="res://Assets/Environment/Barrel_Wooden_Prop.glb" id="2_i4kf4"]
+[ext_resource type="Script" uid="uid://cpiywmlaxp71r" path="res://Resources/CharacterStats.cs" id="2_u2cfn"]
 [ext_resource type="PackedScene" uid="uid://70442v3i1mt" path="res://Assets/Environment/Rock_Cliff_Env_03.glb" id="3_fy36t"]
 [ext_resource type="PackedScene" uid="uid://bn57icx7pd2ei" path="res://Assets/Environment/Large_Mountain_Env_02.glb" id="4_j32wv"]
 [ext_resource type="PackedScene" uid="uid://c3mcrisfokvae" path="res://Assets/Environment/House_Modular_01.glb" id="5_nq5j5"]
@@ -32,6 +33,10 @@ glow_enabled = true
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fy36t"]
 albedo_color = Color(0.329412, 0.490196, 0.286275, 1)
 
+[sub_resource type="Resource" id="Resource_lr1ra"]
+script = ExtResource("2_u2cfn")
+metadata/_custom_type_script = "uid://cpiywmlaxp71r"
+
 [node name="Level" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00270939, 0.0189898, -0.00273228)
 
@@ -50,6 +55,7 @@ material = SubResource("StandardMaterial3D_fy36t")
 
 [node name="Player" parent="." instance=ExtResource("1_t21ke")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.7829, 1, 12.7205)
+CharacterStats = SubResource("Resource_lr1ra")
 
 [node name="Barrel_Wooden_Prop2" parent="." instance=ExtResource("2_i4kf4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.57195, 1.26111, 0)

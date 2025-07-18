@@ -10,6 +10,9 @@ public partial class Player : CharacterBody3D, IDamageable
 
 	public Rig CharacterRig;
 	public HealthComponent HealthComponent { get; set; }
+	
+	[Export]
+	public CharacterStats CharacterStats;
 
 	[Export]
 	private float _maxHealth = 40;
@@ -21,8 +24,6 @@ public partial class Player : CharacterBody3D, IDamageable
 	private float _dashMoveSpeed = 1.6f;
 	[ExportCategory("RPG Stats")]
 
-	[Export]
-	private CharacterStats _characterStats;
 
 	private Vector2 _look = Vector2.Zero;
 	private Node3D _horizontalPivot;
@@ -53,7 +54,6 @@ public partial class Player : CharacterBody3D, IDamageable
 
 		CharacterRig.SetActiveMesh(CharacterRig.KnightMeshInstances[0]);
 
-		GD.Print("Speed:", _characterStats.Speed.Value);
 	}
 
 	public override void _PhysicsProcess(double delta)
