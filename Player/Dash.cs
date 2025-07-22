@@ -34,7 +34,7 @@ public partial class Dash : Node3D
         if (_player.CharacterRig.isDashing())
         {
             _dashParticles.Emitting = true;
-            _player.Velocity = _direction * Player.Speed * _speedMultiplier;
+            _player.Velocity = _direction * _player.CharacterStats.Speed.Value * _speedMultiplier;
         }
         else
         {

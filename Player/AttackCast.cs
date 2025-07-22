@@ -3,7 +3,7 @@ using System;
 
 public partial class AttackCast : RayCast3D
 {
-    public void DealDamage()
+    public void DealDamage(float damage)
     {
         if (!IsColliding()) return;
 
@@ -11,7 +11,7 @@ public partial class AttackCast : RayCast3D
 
         if (collider is IDamageable entity)
         {
-            entity.HealthComponent.TakeDamage(10);
+            entity.HealthComponent.TakeDamage(damage);
         }
 
         if (collider is CollisionObject3D collisionObject)

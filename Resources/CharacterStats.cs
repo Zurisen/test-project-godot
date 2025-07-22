@@ -32,10 +32,10 @@ public partial class CharacterStats : Resource
     }
 
     // Damage bonus on attack
-    public Stat Strength = new Stat(2, 12);
+    public Stat Strength = new Stat(2, 40);
 
     // Movement Speed m/s
-    public Stat Speed = new Stat(3, 4);
+    public Stat Speed = new Stat(3, 8);
 
     // HP Bonus per level
     public Stat Endurance = new Stat(5, 25);

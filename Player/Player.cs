@@ -3,8 +3,6 @@ using Godot;
 
 public partial class Player : CharacterBody3D, IDamageable
 {
-	public const float Speed = 5.0f;
-	public const float JumpVelocity = 4.5f;
 	public const float MouseSensitivity = 0.003f;
 	public const double Decay = 8;
 
@@ -98,6 +96,11 @@ public partial class Player : CharacterBody3D, IDamageable
 				_heavyAttack();
 			}
 		}
+		// DEBUG
+		if (@event.IsActionPressed("debug_gain_xp"))
+		{
+			CharacterStats.Xp += 10000;
+		}
 	}
 
 	private void _defeatEvent()
@@ -151,7 +154,7 @@ public partial class Player : CharacterBody3D, IDamageable
 
 	private void OnRigHeavyAttack()
 	{
-		_areaAttack.DealDamage(50);
+		_areaAttack.DealDamage(15+CharacterStats.Strength.Value);
 	}
 
 	private Vector3 _handleMovement()
@@ -165,9 +168,9 @@ public partial class Player : CharacterBody3D, IDamageable
 	{
 		if (!CharacterRig.isSlashing()) return;
 
-		Velocity = _movementDirection * _slashMoveSpeed * Speed;
+		Velocity = _movementDirection * _slashMoveSpeed * CharacterStats.Speed.Value;
 		_lookTowardDirection(_movementDirection, delta);
-		_attackCast.DealDamage();
+		_attackCast.DealDamage(5+CharacterStats.Strength.Value);
 	}
 
 	private void _handleAreaAttackPhysicsFrame(double delta)
@@ -183,8 +186,8 @@ public partial class Player : CharacterBody3D, IDamageable
 	{
 		if (!CharacterRig.isIdle() && !CharacterRig.isDashing()) return;
 
-		velocity.X = ExponentialDecay(velocity.X, direction.X * Speed, Decay, delta);
-		velocity.Z = ExponentialDecay(velocity.Z, direction.Z * Speed, Decay, delta);
+		velocity.X = ExponentialDecay(velocity.X, direction.X * CharacterStats.Speed.Value, Decay, delta);
+		velocity.Z = ExponentialDecay(velocity.Z, direction.Z * CharacterStats.Speed.Value, Decay, delta);
 
 		if (direction != Vector3.Zero)
 		{
