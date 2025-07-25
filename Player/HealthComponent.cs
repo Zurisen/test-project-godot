@@ -8,6 +8,9 @@ public partial class HealthComponent : Node
     [Signal]
     public delegate void DefeatEventHandler();
 
+    [Export]
+    private PhysicsBody3D _body;
+
     private float _maxHealth;
     public float MaxHealth
     {
@@ -34,9 +37,13 @@ public partial class HealthComponent : Node
         }
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, bool isCrit)
     {
         CurrentHealth -= damage;
+
+        var color = isCrit ? Colors.Red : Colors.Yellow;
+        var size = isCrit ? 102 : 64;
+        VfxManager.Instance.SpawnDamageNumber(damage, color, size, _body.GlobalPosition);
     }
 }
 // 

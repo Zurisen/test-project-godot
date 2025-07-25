@@ -154,7 +154,7 @@ public partial class Player : CharacterBody3D, IDamageable
 
 	private void OnRigHeavyAttack()
 	{
-		_areaAttack.DealDamage(15+CharacterStats.Strength.Value);
+		_areaAttack.DealDamage(15+CharacterStats.Strength.Value, CharacterStats.Agility.Value);
 	}
 
 	private Vector3 _handleMovement()
@@ -170,7 +170,7 @@ public partial class Player : CharacterBody3D, IDamageable
 
 		Velocity = _movementDirection * _slashMoveSpeed * CharacterStats.Speed.Value;
 		_lookTowardDirection(_movementDirection, delta);
-		_attackCast.DealDamage(5+CharacterStats.Strength.Value);
+		_attackCast.DealDamage(5+CharacterStats.Strength.Value, CharacterStats.Agility.Value);
 	}
 
 	private void _handleAreaAttackPhysicsFrame(double delta)
