@@ -4,6 +4,9 @@ using System;
 [GlobalClass]
 public partial class CharacterStats : Resource
 {
+    [Signal]
+    public delegate void OnLevelUpEventHandler();
+
     private int _maxLevel = 60;
     private int _level;
     public int Level
@@ -77,6 +80,11 @@ public partial class CharacterStats : Resource
 
     }
 
+    public int GetMaxHp()
+    {
+        return 20 + (Level * (int)Endurance.Value);
+    }
+
     public void LevelUp()
     {
         if (Level >= _maxLevel) return;
@@ -86,6 +94,8 @@ public partial class CharacterStats : Resource
         Agility.Increase();
         Endurance.Increase();
         Speed.Increase();
+
+        EmitSignal(SignalName.OnLevelUp);
 
         GD.PrintT(Strength.Value, Agility.Value, Speed.Value, Endurance.Value);
     }

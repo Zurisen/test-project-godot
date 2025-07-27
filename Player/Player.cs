@@ -13,8 +13,6 @@ public partial class Player : CharacterBody3D, IDamageable
 	public CharacterStats CharacterStats;
 
 	[Export]
-	private float _maxHealth = 40;
-	[Export]
 	private float _movementAnimationDecay = 10f;
 	[Export]
 	private float _slashMoveSpeed = 0.3f;
@@ -47,8 +45,9 @@ public partial class Player : CharacterBody3D, IDamageable
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 
 		HealthComponent = GetNode<HealthComponent>("HealthComponent");
-		HealthComponent.MaxHealth = _maxHealth;
+		HealthComponent.MaxHealth = CharacterStats.GetMaxHp();
 		HealthComponent.Defeat += _defeatEvent;
+		CharacterStats.OnLevelUp += () => HealthComponent.MaxHealth = CharacterStats.GetMaxHp();
 
 		CharacterRig.SetActiveMesh(CharacterRig.KnightMeshInstances[0]);
 
