@@ -1,0 +1,74 @@
+[gd_scene load_steps=7 format=3 uid="uid://8jjhoogmob7x"]
+
+[ext_resource type="Texture2D" uid="uid://dtvljh4s5pusb" path="res://Assets/UIAssets/UIAssets/Unitframe/HealthBarUnder.png" id="1_bsqwb"]
+[ext_resource type="Script" uid="uid://n01smsrvwm5q" path="res://UI/UserInterface.cs" id="1_g3wek"]
+[ext_resource type="Texture2D" uid="uid://cvwxmc41jv4i2" path="res://Assets/UIAssets/UIAssets/Unitframe/HealthBarOver.png" id="2_q0rkl"]
+[ext_resource type="Texture2D" uid="uid://d217ladijf0i6" path="res://Assets/UIAssets/UIAssets/Unitframe/MainBar.png" id="3_j30b4"]
+[ext_resource type="FontFile" uid="uid://b143jdbq24ny" path="res://Assets/Fonts/EB_Garamond,MedievalSharp/EB_Garamond/static/EBGaramond-Bold.ttf" id="3_q0rkl"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_g3wek"]
+font = ExtResource("3_q0rkl")
+font_size = 32
+font_color = Color(1, 0.717647, 0.333333, 1)
+
+[node name="UserInterface" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_g3wek")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="InfoBar" type="Control" parent="MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HealtBarUnder" type="TextureRect" parent="MarginContainer/InfoBar"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_bsqwb")
+
+[node name="HealthBar" type="TextureProgressBar" parent="MarginContainer/InfoBar/HealtBarUnder"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+value = 100.0
+texture_progress = ExtResource("3_j30b4")
+
+[node name="HealthBarOver" type="TextureRect" parent="MarginContainer/InfoBar"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("2_q0rkl")
+
+[node name="LevelLabel" type="Label" parent="MarginContainer/InfoBar/HealthBarOver"]
+custom_minimum_size = Vector2(95, 0)
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 95.0
+offset_bottom = -6.0
+grow_vertical = 2
+text = "99"
+label_settings = SubResource("LabelSettings_g3wek")
+horizontal_alignment = 1
+vertical_alignment = 1

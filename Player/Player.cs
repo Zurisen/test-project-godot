@@ -28,6 +28,7 @@ public partial class Player : CharacterBody3D, IDamageable
 	private AttackCast _attackCast;
 	private AreaAttack _areaAttack;
 	private CollisionShape3D _collisionShape3D;
+	private UserInterface _userInterface;
 	private Vector3 _movementDirection = Vector3.Zero;
 
 	public override void _Ready()
@@ -41,13 +42,17 @@ public partial class Player : CharacterBody3D, IDamageable
 		_collisionShape3D = GetNode<CollisionShape3D>("CollisionShape3D");
 		_attackCast = GetNode<AttackCast>("RigPivot/CharacterRig/RayAttachment/AttackCast");
 		_areaAttack = GetNode<AreaAttack>("RigPivot/CharacterRig/AreaAttack");
+		HealthComponent = GetNode<HealthComponent>("HealthComponent");
+		_userInterface = GetNode<UserInterface>("UserInterface");
+
+		HealthComponent.MaxHealth = CharacterStats.GetMaxHp();
+		HealthComponent.Defeat += _defeatEvent;
+		HealthComponent.HealthChanged += _userInterface.UpdateHealthBar;
 		CharacterRig.HeavyAttack += OnRigHeavyAttack;
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 
-		HealthComponent = GetNode<HealthComponent>("HealthComponent");
-		HealthComponent.MaxHealth = CharacterStats.GetMaxHp();
-		HealthComponent.Defeat += _defeatEvent;
-		CharacterStats.OnLevelUp += () => HealthComponent.MaxHealth = CharacterStats.GetMaxHp();
+		CharacterStats.OnLevelUp += _levelUpEvent;
+		_userInterface.Init();
 
 		CharacterRig.SetActiveMesh(CharacterRig.KnightMeshInstances[0]);
 
@@ -100,6 +105,13 @@ public partial class Player : CharacterBody3D, IDamageable
 		{
 			CharacterStats.Xp += 10000;
 		}
+	}
+
+	private void _levelUpEvent()
+	{
+		HealthComponent.MaxHealth = CharacterStats.GetMaxHp();
+		_userInterface.UpdateLevelLabel();
+
 	}
 
 	private void _defeatEvent()

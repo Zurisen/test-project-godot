@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://ckcm45dkayr8f"]
+[gd_scene load_steps=6 format=3 uid="uid://ckcm45dkayr8f"]
 
 [ext_resource type="Script" uid="uid://dmxw2hl4t0e4v" path="res://Player/DamageNumber.cs" id="1_ur3r0"]
+[ext_resource type="FontFile" uid="uid://b143jdbq24ny" path="res://Assets/Fonts/EB_Garamond,MedievalSharp/EB_Garamond/static/EBGaramond-Bold.ttf" id="2_txons"]
 
 [sub_resource type="Animation" id="Animation_ur3r0"]
 length = 0.001
@@ -69,6 +70,7 @@ script = ExtResource("1_ur3r0")
 billboard = 1
 no_depth_test = true
 text = "25"
+font = ExtResource("2_txons")
 font_size = 64
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

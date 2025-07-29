@@ -29,11 +29,11 @@ public partial class HealthComponent : Node
         set
         {
             _currentHealth = Math.Max(0, value);
+            EmitSignal(SignalName.HealthChanged);
             if (_currentHealth == 0)
             {
                 EmitSignal(SignalName.Defeat);
             }
-            EmitSignal(SignalName.HealthChanged);
         }
     }
 
