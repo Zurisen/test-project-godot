@@ -1,10 +1,14 @@
-[gd_scene load_steps=7 format=3 uid="uid://8jjhoogmob7x"]
+[gd_scene load_steps=8 format=3 uid="uid://8jjhoogmob7x"]
 
 [ext_resource type="Texture2D" uid="uid://dtvljh4s5pusb" path="res://Assets/UIAssets/UIAssets/Unitframe/HealthBarUnder.png" id="1_bsqwb"]
 [ext_resource type="Script" uid="uid://n01smsrvwm5q" path="res://UI/UserInterface.cs" id="1_g3wek"]
 [ext_resource type="Texture2D" uid="uid://cvwxmc41jv4i2" path="res://Assets/UIAssets/UIAssets/Unitframe/HealthBarOver.png" id="2_q0rkl"]
 [ext_resource type="Texture2D" uid="uid://d217ladijf0i6" path="res://Assets/UIAssets/UIAssets/Unitframe/MainBar.png" id="3_j30b4"]
 [ext_resource type="FontFile" uid="uid://b143jdbq24ny" path="res://Assets/Fonts/EB_Garamond,MedievalSharp/EB_Garamond/static/EBGaramond-Bold.ttf" id="3_q0rkl"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_j30b4"]
+font = ExtResource("3_q0rkl")
+font_size = 20
 
 [sub_resource type="LabelSettings" id="LabelSettings_g3wek"]
 font = ExtResource("3_q0rkl")
@@ -53,6 +57,22 @@ grow_horizontal = 2
 grow_vertical = 2
 value = 100.0
 texture_progress = ExtResource("3_j30b4")
+
+[node name="HealthLabel" type="Label" parent="MarginContainer/InfoBar/HealtBarUnder/HealthBar"]
+custom_minimum_size = Vector2(95, 0)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 91.0
+offset_top = -39.0
+offset_right = 186.0
+offset_bottom = 4.0
+grow_vertical = 2
+text = "99"
+label_settings = SubResource("LabelSettings_j30b4")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="HealthBarOver" type="TextureRect" parent="MarginContainer/InfoBar"]
 layout_mode = 0

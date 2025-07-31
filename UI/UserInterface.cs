@@ -8,12 +8,14 @@ public partial class UserInterface : Control
 
     private Label _levelLabel;
     private TextureProgressBar _healthBar;
+    private Label _healthLabel;
 
     public override void _Ready()
     {
         base._Ready();
         _levelLabel = GetNode<Label>("MarginContainer/InfoBar/HealthBarOver/LevelLabel");
         _healthBar = GetNode<TextureProgressBar>("MarginContainer/InfoBar/HealtBarUnder/HealthBar");
+        _healthLabel = GetNode<Label>("MarginContainer/InfoBar/HealtBarUnder/HealthBar/HealthLabel");
     }
 
     public void Init()
@@ -26,6 +28,8 @@ public partial class UserInterface : Control
         GD.Print("Triggered: ", _player.HealthComponent.CurrentHealth);
         _healthBar.MaxValue = _player.HealthComponent.MaxHealth;
         _healthBar.Value = _player.HealthComponent.CurrentHealth;
+
+        _healthLabel.Text = $"{_healthBar.Value} / {_healthBar.MaxValue}";
         
     }
 
