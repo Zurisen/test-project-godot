@@ -18,6 +18,7 @@ public partial class UserInterface : Control
         _healthBar = GetNode<TextureProgressBar>("MarginContainer/InfoBar/HealtBarUnder/HealthBar");
         _healthLabel = GetNode<Label>("MarginContainer/InfoBar/HealtBarUnder/HealthBar/HealthLabel");
         _inventory = GetNode<Inventory>("Inventory");
+        _inventory.Init(_player);
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -25,11 +26,11 @@ public partial class UserInterface : Control
         base._UnhandledInput(@event);
         if (@event.IsActionPressed("open_inventory"))
         {
-            _handleInventory();
+            HandleInventory();
         }
     }
 
-    private void _handleInventory()
+    public void HandleInventory()
     {
         _inventory.Visible = !_inventory.Visible;
         Input.MouseMode = _inventory.Visible ? Input.MouseModeEnum.Visible : Input.MouseModeEnum.Captured;
@@ -44,7 +45,6 @@ public partial class UserInterface : Control
 
     public void UpdateHealthBar()
     {
-        GD.Print("Triggered: ", _player.HealthComponent.CurrentHealth);
         _healthBar.MaxValue = _player.HealthComponent.MaxHealth;
         _healthBar.Value = _player.HealthComponent.CurrentHealth;
 
@@ -55,6 +55,7 @@ public partial class UserInterface : Control
     public void UpdateLevelLabel()
     {
         _levelLabel.Text = (_player.CharacterStats.Level+1).ToString();
+        _inventory.UpdateStatsLabels();
     }
 
 }
