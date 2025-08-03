@@ -11,7 +11,10 @@ public partial class Enemy : CharacterBody3D, IDamageable
     private float _maxHealth = 20;
     [Export]
     private long _xpValue = 30;
+    [Export]
+    private float _speed = 3;
 
+    private Vector3 _velocityTarget = Vector3.Zero; 
     private Rig _characterRig;
     private CollisionShape3D _collisionShape3D;
     private ShapeCast3D _playerDetector;
@@ -47,16 +50,31 @@ public partial class Enemy : CharacterBody3D, IDamageable
     {
         base._PhysicsProcess(delta);
 
-        var velocityTarget = Vector3.Zero;
-        _navigationAgent3D.TargetPosition = _player.GlobalPosition;
-
-        CheckForAttacks();
-        if (!_navigationAgent3D.IsTargetReached())
+        if (IsOnFloor())
         {
-            velocityTarget = _getLocalNavigationDirection() * 5.0f;
-            _orientRig(_navigationAgent3D.GetNextPathPosition());
+            _velocityTarget = Vector3.Zero;
+            // Only move if not attacking
+            if (_characterRig.isIdle())
+            {
+                _navigationAgent3D.TargetPosition = _player.GlobalPosition;
+
+                if (!_navigationAgent3D.IsTargetReached())
+                {
+                    _velocityTarget = _getLocalNavigationDirection() * _speed;
+                    _orientRig(_navigationAgent3D.GetNextPathPosition());
+                }
+            }
+
+            CheckForAttacks();
         }
-        _navigationAgent3D.Velocity = velocityTarget;
+        else
+        {
+            // Add the gravity.
+			_velocityTarget += GetGravity() * (float)delta;
+
+        }
+
+        _navigationAgent3D.Velocity = _velocityTarget;
 
     }
 
@@ -73,6 +91,7 @@ public partial class Enemy : CharacterBody3D, IDamageable
                 if (collider is Player)
                 {
                     _characterRig.Travel("Overhead");
+                    _navigationAgent3D.AvoidanceMask = 0;
                 }
             }
 
@@ -108,14 +127,26 @@ public partial class Enemy : CharacterBody3D, IDamageable
 
     private void OnRigHeavyAttack()
     {
-        _areaAttack.DealDamage(20, 0);
+        _areaAttack.DealDamage(10, 0);
+        _navigationAgent3D.AvoidanceMask = 1;
     }
 
 
     // Connected Signals
     private void _OnNavigationAgent3dVelocityComputed(Vector3 safeVelocity)
     {
-        Velocity = safeVelocity;
+        // Only apply movement if the enemy is idle (not attacking)
+        if (_characterRig.isIdle())
+        {
+            Velocity = new Vector3(safeVelocity.X, _velocityTarget.Y, safeVelocity.Z);
+            _characterRig.UpdateAnimationTree(Velocity.Normalized());
+        }
+        else
+        {
+            // Stop movement during attacks
+            Velocity = new Vector3(0, _velocityTarget.Y, 0);
+            _characterRig.UpdateAnimationTree(Vector3.Zero);
+        }
         MoveAndSlide();
     }
 

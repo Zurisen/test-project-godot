@@ -155,16 +155,16 @@ transform = Transform3D(-0.87462, 0, 0.48481, 0, 1, 0, -0.48481, 0, -0.87462, -2
 
 [node name="Node3D" type="Node3D" parent="."]
 
-[node name="Enemy" parent="Node3D" instance=ExtResource("15_ts5l0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01255, 4.12888)
-
 [node name="Enemy2" parent="Node3D" instance=ExtResource("15_ts5l0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 7.75217)
 
 [node name="Enemy3" parent="Node3D" instance=ExtResource("15_ts5l0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.13859, 0.902525, 0.763409)
 
-[node name="Enemy4" parent="Node3D" instance=ExtResource("15_ts5l0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.34506, 1, 6.70468)
+[node name="Enemy7" parent="Node3D" instance=ExtResource("15_ts5l0")]
+transform = Transform3D(1, 7.39237e-09, 1.11759e-08, 8.26549e-09, 1, -3.72529e-09, 3.72529e-09, -5.58794e-08, 1, 5.6094, 1.03862, 4.98449)
+
+[node name="Enemy9" parent="Node3D" instance=ExtResource("15_ts5l0")]
+transform = Transform3D(1, 7.21775e-09, 1.11759e-08, 8.26549e-09, 1, -3.72529e-09, 1.86265e-09, -4.84288e-08, 1, 6.85213, 1.50825, 3.18345)
 
 [editable path="Barrel_Wooden_Prop2"]
