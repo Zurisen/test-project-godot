@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Security.Cryptography.X509Certificates;
 
 public partial class Rig : Node3D
 {
@@ -17,6 +18,8 @@ public partial class Rig : Node3D
 
     public MeshInstance3D[] KnightMeshInstances;
     public MeshInstance3D[] VillagerMeshInstances;
+    public Node3D ShieldSlot;
+    public Node3D WeaponSlot;
 
     public override void _Ready()
     {
@@ -26,7 +29,7 @@ public partial class Rig : Node3D
         _playback = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
         _runPath = "parameters/MoveSpace/blend_position";
         _skeleton3D = GetNode<Skeleton3D>("CharacterRig/GameRig/Skeleton3D");
-        
+
         KnightMeshInstances = [
             GetNode<MeshInstance3D>("CharacterRig/GameRig/Skeleton3D/Knight_01"),
             GetNode<MeshInstance3D>("CharacterRig/GameRig/Skeleton3D/Knight_02")
@@ -37,6 +40,8 @@ public partial class Rig : Node3D
             GetNode<MeshInstance3D>("CharacterRig/GameRig/Skeleton3D/Villager_02")
         ];
 
+        ShieldSlot = GetNode<Node3D>("LeftHand_Attachment/ShieldSlot");
+        WeaponSlot = GetNode<Node3D>("RightHand_Attachment/WeaponSlot");
     }
 
     public override void _PhysicsProcess(double delta)
@@ -63,6 +68,25 @@ public partial class Rig : Node3D
             _runWeightTarget = 1.0f;
         }
 
+    }
+
+    public void ReplaceWeapon(PackedScene weaponScene)
+    {
+        foreach (var child in WeaponSlot.GetChildren())
+        {
+            child.QueueFree();
+        }
+        var newWeapon = weaponScene.Instantiate();
+        WeaponSlot.AddChild(newWeapon);
+    }
+    public void ReplaceShield(PackedScene shieldScene)
+    {
+        foreach (var child in ShieldSlot.GetChildren())
+        {
+            child.QueueFree();
+        }
+        var newShield = shieldScene.Instantiate();
+        ShieldSlot.AddChild(newShield);
     }
 
     public void Travel(string animationName)

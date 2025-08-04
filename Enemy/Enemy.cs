@@ -8,6 +8,10 @@ public partial class Enemy : CharacterBody3D, IDamageable
     public HealthComponent HealthComponent { get; set; }
 
     [Export]
+    public PackedScene[] Shields;
+    [Export]
+    public PackedScene[] Weapons;
+    [Export]
     private float _maxHealth = 20;
     [Export]
     private long _xpValue = 30;
@@ -37,14 +41,18 @@ public partial class Enemy : CharacterBody3D, IDamageable
 
         int randomIdx = _random.Next(_characterRig.VillagerMeshInstances.Length);
         _characterRig.SetActiveMesh(_characterRig.VillagerMeshInstances[randomIdx]);
+        _characterRig.ReplaceShield(Shields[_random.Next(Shields.Length)]);
+        _characterRig.ReplaceWeapon(Weapons[_random.Next(Weapons.Length)]);
         _characterRig.HeavyAttack += OnRigHeavyAttack;
+
         HealthComponent = GetNode<HealthComponent>("HealthComponent");
         HealthComponent.MaxHealth = _maxHealth;
-
         HealthComponent.Defeat += DefeatEvent;
 
 
+
     }
+
 
     public override void _PhysicsProcess(double delta)
     {
@@ -70,7 +78,7 @@ public partial class Enemy : CharacterBody3D, IDamageable
         else
         {
             // Add the gravity.
-			_velocityTarget += GetGravity() * (float)delta;
+            _velocityTarget += GetGravity() * (float)delta;
 
         }
 
@@ -119,8 +127,14 @@ public partial class Enemy : CharacterBody3D, IDamageable
     private void DefeatEvent()
     {
         _characterRig.Travel("Defeat");
-        _collisionShape3D.Disabled = true;
         SetPhysicsProcess(false);
+        _navigationAgent3D.SetPhysicsProcess(false); // Stop the NavigationAgent3D from processing further
+        
+        // Stop all movement and physics interactions
+        Velocity = Vector3.Zero;
+        SetCollisionLayerValue(1, false); // Remove from collision layer
+        SetCollisionMaskValue(1, false); // Stop detecting collisions
+
         _player.CharacterStats.Xp += _xpValue;
 
     }
@@ -135,6 +149,10 @@ public partial class Enemy : CharacterBody3D, IDamageable
     // Connected Signals
     private void _OnNavigationAgent3dVelocityComputed(Vector3 safeVelocity)
     {
+        // Don't move if physics processing is disabled (enemy is defeated)
+        if (!IsPhysicsProcessing())
+            return;
+            
         // Only apply movement if the enemy is idle (not attacking)
         if (_characterRig.isIdle())
         {
